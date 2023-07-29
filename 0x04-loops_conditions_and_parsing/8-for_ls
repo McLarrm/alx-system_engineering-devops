@@ -6,4 +6,3 @@ for file in *; do
     echo "$display_name"
   fi
 done
-
