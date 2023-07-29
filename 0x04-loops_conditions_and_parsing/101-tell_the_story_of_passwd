@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 # This script displays the content of the /etc/passwd file in a specific format using a while loop and IFS.
-while IFS=":" read -r -a line ; do
-  printf "The user ${line[0]} is part of the ${line[3]} gang, lives in ${line[5]} and rides ${line[6]}. ${line[2]}'s place is protected by the passcode ${line[1]}, more info about the user here: ${line[4]}"
+while IFS=: read -r user pass uid gid comment home shell; do
+  printf "The user %s is part of the %s gang, lives in %s and rides %s.\nUSER ID's place is protected by the passcode %s, more info about the user here: %s\n\n" "$user" "$(getent group "$gid" | cut -d ':' -f 1)" "$home" "$shell" "$pass" "$comment"
 done < /etc/passwd
