@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# This script sets up a PID file, displays messages, and handles signals.
+function handle_sigterm_sigquit
+{
+  echo "I hate the kill command"
+  echo "Cleaning up and terminating..."
+  rm /var/run/myscript.pid
+  exit 0
+}
+function handle_sigint
+{
+  echo "Y U no love me?!"
+}
+trap 'handle_sigterm_sigquit' SIGTERM SIGQUIT
+trap 'handle_sigint' SIGINT
+echo $$ > /var/run/myscript.pid
+while true; do
+  echo "To infinity and beyond"
+  sleep 1
+done
