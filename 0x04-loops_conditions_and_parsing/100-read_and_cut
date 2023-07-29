@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# This script displays the required information from the /etc/passwd file.
+while IFS=: read -r user _ uid _ home _; do
+  echo "Username: $user"
+  echo "User ID: $uid"
+  echo "Home Directory: $home"
+done < /etc/passwd
