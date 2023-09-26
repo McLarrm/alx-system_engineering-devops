@@ -1,7 +1,5 @@
-#!/u#!/usr/bin/env bash
-# This script configures Nginx to have a custom 404 page.
-
 #!/usr/bin/env bash
+# This script configures Nginx to have a custom 404 page.
 
 sudo apt-get update
 sudo apt-get install -y nginx
