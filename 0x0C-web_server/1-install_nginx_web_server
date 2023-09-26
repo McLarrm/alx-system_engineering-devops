@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# This script installs Nginx and configures it to meet the requirements.
+
+# Update the package list
+apt-get update
+
+# Install Nginx
+apt-get install -y nginx
+
+echo "Hello World!" > /var/www/html/index.html
+
+if [ -f /var/run/nginx.pid ]; then
+    nginx -s stop
+fi
+
+nginx
+
+sed -i 's/listen 80 default_server;/listen 80;/' /etc/nginx/sites-available/default
+
+nginx -s reload
+
+exit 0
