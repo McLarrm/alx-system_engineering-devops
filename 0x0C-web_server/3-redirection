@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# This script configures Nginx to perform a 301 redirect for /redirect_me.
+
+# Check if Nginx is installed
+if ! [ -x "$(command -v nginx)" ]; then
+  echo "Nginx is not installed. Please install Nginx first."
+  exit 1
+fi
+
+echo "server {
+    listen 80;
+    listen [::]:80;
+
+    server_name _;
+
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
+
+    location / {
+        return 404;
+    }
+}" > /etc/nginx/sites-available/redirect_me
+
+ln -s /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
+
+if nginx -t; then
+  # Reload Nginx to apply the new configuration
+  systemctl reload nginx
+  echo "Nginx configuration reloaded."
+else
+  echo "Nginx configuration test failed. Please check your configuration files."
+fi
+
+exit 0
