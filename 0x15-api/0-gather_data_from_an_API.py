@@ -1,45 +1,43 @@
 #!/usr/bin/python3
+'''
+Returns information about to-do list
+'''
 
 import requests
-import sys
+from sys import argv
 
-def get_employee_todo_list(employee_id):
-    base_url = "https://jsonplaceholder.typicode.com"
-    user_url = f"{base_url}/users/{employee_id}"
-    todos_url = f"{base_url}/todos?userId={employee_id}"
 
-    try:
-        user_response = requests.get(user_url)
-        todos_response = requests.get(todos_url)
+if __name__ == '__main__':
+    
+    emp_id = argv[1]
+    total_todos = 0
+    done_todos = 0
+    done_todos_titles = []
 
-        if user_response.status_code == 200 and todos_response.status_code == 200:
-            user_data = user_response.json()
-            todos_data = todos_response.json()
+    res = requests.get(
+                   'https://jsonplaceholder.typicode.com/users/' +
+                   emp_id)
+    emp_name = res.json().get('name', 'user name not found')
 
-            completed_tasks = [task for task in todos_data if task["completed"]]
-            total_tasks = len(todos_data)
-            completed_count = len(completed_tasks)
+    res = requests.get(
+                   'https://jsonplaceholder.typicode.com/users/' +
+                   emp_id + '/todos')
+    emp_todos = res.json()
 
-            print(f"Employee {user_data['name']} is done with tasks({completed_count}/{total_tasks}):")
+    for todo in emp_todos:
+        total_todos += 1
+        if todo.get('completed') is True:
+            done_todos += 1
+            done_todos_titles.append(todo.get(
+                                          'title',
+                                          'no title found'
+                                          ))
 
-            for task in completed_tasks:
-                print(f"    {task['title']}")
+    print('Employee {} is done with tasks({}/{}):'.format(
+                                                   emp_name,
+                                                   done_todos,
+                                                   total_todos
+                                                   ))
 
-        else:
-            print("Error: Unable to fetch data. Please check the employee ID.")
-
-    except requests.exceptions.RequestException as e:
-        print(f"Error: {e}")
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python3 script_name.py <employee_id>")
-        sys.exit(1)
-
-    employee_id = sys.argv[1]
-
-    if not employee_id.isdigit():
-        print("Error: Employee ID must be an integer.")
-        sys.exit(1)
-
-    get_employee_todo_list(int(employee_id))
+    for title in done_todos_titles:
+        print('\t ' + title)
