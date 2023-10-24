@@ -8,7 +8,7 @@ from sys import argv
 
 
 if __name__ == '__main__':
-    
+
     emp_id = argv[1]
     total_todos = 0
     done_todos = 0
