@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 '''
-
+Export data in the CSV format
 '''
 
 import csv
