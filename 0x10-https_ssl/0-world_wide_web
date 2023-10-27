@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
-# Script that does memes
-# dig "$1" |  grep -A1 'ANSWER SECTION:' | awk 'FNR == 2 {print $4}'
+# Script that does dank memes
 
 answer() {
-	dig www."$1" |  grep -A1 'ANSWER SECTION:' | awk 'FNR == 2 {print echo "The subdomain www is a "$4" record and points to "$5""}'
-	dig lb-01."$1" |  grep -A1 'ANSWER SECTION:' | awk 'FNR == 2 {print echo "The subdomain lb-01 is a "$4" record and points to "$5""}'
-    dig web-01."$1" |  grep -A1 'ANSWER SECTION:' | awk 'FNR == 2 {print echo "The subdomain web-01 is a "$4" record and points to "$5""}'
-	dig web-02."$1" |  grep -A1 'ANSWER SECTION:' | awk 'FNR == 2 {print echo "The subdomain web-02 is a "$4" record and points to "$5""}'
+  domain="$1"
+  subdomains=("www" "lb-01" "web-01" "web-02")
+
+  for subdomain in "${subdomains[@]}"; do
+    result=$(dig "$subdomain.$domain" +short)
+    if [ -n "$result" ]; then
+      echo "Your subdomain $subdomain points to your $subdomain server IP"
+    else
+      echo "Your subdomain $subdomain does not point to your $subdomain server IP"
+    fi
+  done
 }
 
 if [ "$#" -eq 1 ]; then
-	answer "$1" "$4" "$5"
-fi
-
-if [ "$#" -eq 2 ]; then
-	dig $2.$1 |  grep -A1 'ANSWER SECTION:' | awk -v temp="$2" 'FNR == 2 {print echo "The subdomain "temp" is a "$4" record and points to "$5""}'
+  answer "$1"
 fi
