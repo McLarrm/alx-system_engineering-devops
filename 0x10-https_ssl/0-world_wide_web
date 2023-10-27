@@ -1,20 +1,35 @@
 #!/usr/bin/env bash
-# Script that does dank memes
+# Script to check subdomains and their DNS records
 
-answer() {
-  domain="$1"
-  subdomains=("www" "lb-01" "web-01" "web-02")
+audit_subdomain() {
+  local domain="$1"
+  local subdomain="$2"
+  local record_type
+  local destination
 
-  for subdomain in "${subdomains[@]}"; do
-    result=$(dig "$subdomain.$domain" +short)
+  if [ -n "$subdomain" ]; then
+    subdomains=("$subdomain")
+  else
+    subdomains=("www" "lb-01" "web-01" "web-02")
+  fi
+
+  for sub in "${subdomains[@]}"; do
+    result=$(dig +short "$sub.$domain")
     if [ -n "$result" ]; then
-      echo "Your subdomain $subdomain points to your $subdomain server IP"
+      record_type=$(dig "$sub.$domain" | grep -A1 'ANSWER SECTION:' | awk 'FNR == 2 {print $4}')
+      destination=$(dig "$sub.$domain" | grep -A1 'ANSWER SECTION:' | awk 'FNR == 2 {print $5}')
+      echo "The subdomain $sub is a $record_type record and points to $destination"
     else
-      echo "Your subdomain $subdomain does not point to your $subdomain server IP"
+      echo "The subdomain $sub does not point to your $sub server IP"
     fi
   done
 }
 
-if [ "$#" -eq 1 ]; then
-  answer "$1"
+if [ "$#" -lt 1 ]; then
+  echo "Usage: $0 <domain> [subdomain]"
+  exit 1
 fi
+
+domain="$1"
+subdomain="$2"
+audit_subdomain "$domain" "$subdomain"
