@@ -28,7 +28,7 @@ nginx -t && systemctl restart nginx
 apt-get clean
 
 # Check if Nginx is running on port 80
-if [ $(netstat -tuln | awk '$4 ~ /:80$/ {print $4}' | wc -l) -eq 2 ]; then
+if [ "$(netstat -tuln | awk '$4 ~ /:80$/ {print $4}' | wc -l)" -eq 2 ]; then
     msg=2
 else
     msg=0
