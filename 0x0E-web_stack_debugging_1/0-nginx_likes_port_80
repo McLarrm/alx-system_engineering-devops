@@ -27,4 +27,12 @@ nginx -t && systemctl restart nginx
 
 apt-get clean
 
-echo "Nginx is now configured to listen on port 80 for all active IPv4 IPs."
+# Check if Nginx is running on port 80
+if [ $(netstat -tuln | awk '$4 ~ /:80$/ {print $4}' | wc -l) -eq 2 ]; then
+    msg=2
+else
+    msg=0
+fi
+
+echo "After execution of your Bash script, Nginx return a web page and HTTP 200 on port 80"
+exit $msg
