@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Prints the titles of the first 10 hot posts listed for a given subreddit
+Prints the titles of the first 10 hot posts listed
 """
 
 import requests
@@ -29,7 +29,6 @@ def top_ten(subreddit):
 
 if __name__ == '__main__':
     import sys
-
 
     if len(sys.argv) < 2:
         print("Please pass an argument for the subreddit to search.")
